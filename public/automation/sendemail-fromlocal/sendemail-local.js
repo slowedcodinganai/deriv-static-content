@@ -44,6 +44,13 @@ app.post('/proxy-fetch', async (req, res) => {
         return res.status(400).json({ error: 'URL is required' });
     }
 
+    const allowList = ['https://example.com', 'https://another-allowed-domain.com'];
+    const isValidUrl = allowList.some(allowedUrl => url.startsWith(allowedUrl));
+
+    if (!isValidUrl) {
+        return res.status(400).json({ error: 'Invalid URL' });
+    }
+
     try {
         const response = await axios.get(url);
         res.json({ html: response.data });
